@@ -30,13 +30,16 @@ function findAndReplace(el) {
     });
     if(str != new_str) {
         var div = document.createElement('div');
-        div.style.display = "inline";
+        div.className = "phone_div"
+        //~ div.style.display = "inline";
         div.innerHTML = new_str;
         el.parentNode.replaceChild(div,el);
     }
 }
 
 findTelNumbers(document.body,findAndReplace);
+//~ chrome.tabs.insertCSS(null, { file: '../css/phone.css' }); //inject CSS
+
 var spans = document.getElementsByClassName("phone_number");
 for(var x = 0; x < spans.length; ++x) {
     spans[x].style.backgroundColor ='yellow';

@@ -11,8 +11,7 @@
   },
   "page_action": {
     "default_icon": "img/tel.png",
-    "default_title": "Phone Numbers Found in This Page",
-    "default_popup": "html/popup.html"     
+    "default_title": "Phone Numbers Found in This Page"
   },
   "content_scripts" : [
     {
@@ -21,6 +20,7 @@
         "https://*/*"
       ],
       "js" : ["js/contentscript.js"],
+      "css" : ["css/phone.css"],
       "run_at" : "document_idle",
       "all_frames" : false
     }
