@@ -24,5 +24,6 @@
       "run_at" : "document_idle",
       "all_frames" : false
     }
-  ]
+  ],
+  "options_page": "html/options.html"
 }  
