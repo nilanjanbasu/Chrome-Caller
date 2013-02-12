@@ -1,3 +1,14 @@
+function addStyle(style) {
+}
+
+function onCallPressed() {
+    //~ alert(this.parentNode.nodeName);
+    var span = this.parentNode.getElementsByClassName('phone_number')[0];
+    var phone = span.innerText;
+    if(phone) {
+        chrome.extension.sendMessage({ phone_number: phone}, function(response) {});
+    }
+}
 function findTelNumbers(el, func) {
     if(el.nodeType == 3) {
         func(el);
@@ -10,12 +21,12 @@ function findTelNumbers(el, func) {
     }
 }
 function findAndReplace(el) {
-    str = el.nodeValue;
-    regex = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?/g ;
-    new_str =  str.replace(regex, function(word){
-        style = "";
+    var str = el.nodeValue;
+    var regex = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?/g ;
+    var new_str =  str.replace(regex, function(word){
+        var style = "";
         console.log("Found a replacable string");
-        return "<span class=\"phone_number\">"+word+"</span>";
+        return "<span class=\"phone_number\">"+word+"</span><button type=\"button\">Call</button>";
     });
     if(str != new_str) {
         var div = document.createElement('div');
@@ -26,6 +37,14 @@ function findAndReplace(el) {
 }
 
 findTelNumbers(document.body,findAndReplace);
+var spans = document.getElementsByClassName("phone_number");
+for(var x = 0; x < spans.length; ++x) {
+    spans[x].style.backgroundColor ='yellow';
+    var bt = spans[x].nextSibling; //potential code breaking point
+    bt.addEventListener("click", onCallPressed , false);
+}
+
+
 
 //~ string = document.body.innerHTML;
 
