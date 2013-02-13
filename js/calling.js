@@ -2,11 +2,6 @@ function notify(msg) {
     
 }
 
-
-function webrtcNotSupportedAlert() {
-    notify("Your browser doesn't support webrtc. You need Chrome 23 to use this demo");
-}
-
 function isNotEmpty(n) {
     return n.length > 0;
 }
@@ -60,36 +55,6 @@ function callAnsweredUI() {
     $('#incoming_callbox').hide('slow');
     $('#callcontainer').hide('slow');
     dialpadShow();
-}
-
-
-function onReady() {
-    console.log("onReady...");
-    $('#status_txt').text('Login');
-    $('#login_box').show();
-}
-
-function login() {
-    Plivo.conn.login($("#username").val(), $("#password").val());
-}
-
-function logout() {
-    Plivo.conn.logout();
-}
-
-function onLogin() {
-    $('#status_txt').text('Logged in');
-    $('#login_box').hide();
-    $('#logout_box').show();
-    $('#callcontainer').show();
-}
-
-function onLoginFailed() {
-    $('#status_txt').text("Login Failed");
-}
-
-function onLogout() {
-    initUI();
 }
 
 function onCalling() {
@@ -182,14 +147,6 @@ function onIncomingCallCanceled() {
     callUI();
 }
 
-function  onMediaPermission (result) {
-    if (result) {
-        console.log("get media permission");
-    } else {
-        alert("you don't allow media permission, you will can't make a call until you allow it");
-    }
-}
-
 function answer() {
     console.log("answering")
     $('#status_txt').text('Answering....');
@@ -202,22 +159,15 @@ function reject() {
     Plivo.conn.reject();
 }
 
-
-$(function () {        
-    Plivo.onWebrtcNotSupported = webrtcNotSupportedAlert;
-    Plivo.onReady = onReady;
-    Plivo.onLogin = onLogin;
-    Plivo.onLoginFailed = onLoginFailed;
-    Plivo.onLogout = onLogout;
+$(function () {            
     Plivo.onCalling = onCalling;
     Plivo.onCallRemoteRinging = onCallRemoteRinging;
     Plivo.onCallAnswered = onCallAnswered;
     Plivo.onCallTerminated = onCallTerminated;
     Plivo.onCallFailed = onCallFailed;
-    Plivo.onMediaPermission = onMediaPermission;
     Plivo.onIncomingCall = onIncomingCall;
     Plivo.onIncomingCallCanceled = onIncomingCallCanceled;
-    Plivo.init();
+    
     
     var phone = window.location.hash.substring(1);
     $("title").text("Call" + phone);

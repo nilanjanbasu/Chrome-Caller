@@ -38,7 +38,6 @@ function findAndReplace(el) {
 }
 
 findTelNumbers(document.body,findAndReplace);
-//~ chrome.tabs.insertCSS(null, { file: '../css/phone.css' }); //inject CSS
 
 var spans = document.getElementsByClassName("phone_number");
 for(var x = 0; x < spans.length; ++x) {
