@@ -40,7 +40,7 @@ function onRequest(request, sender, sendResponse){
         }
         if(!exists) { // The phone number is not currently being called
             var url = 'html/calling.html#' + ph_no;
-            chrome.windows.create({ 'url' : url, 'type' : 'popup' }, create_window_handler(ph_no));
+            chrome.windows.create({ 'url' : url, 'type' : 'popup', height: 400, width: 400 , left: 400, top: 200}, create_window_handler(ph_no));
         } else{
             chrome.windows.update(parseInt(win_id_if_exists), { focused : true }, function(window){});
         }
