@@ -140,8 +140,8 @@ $(function () {
     Plivo.onLogout = onLogout;
     Plivo.init();
     
-    //~ var phone = window.location.hash.substring(1);
-    var phone = "919748327244"; 
+    var phone = window.location.hash.substring(1);
+    //~ var phone = "919748327244"; 
     $("title").text("Call: " + phone);
     
     login();
