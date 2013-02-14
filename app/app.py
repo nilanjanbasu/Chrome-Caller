@@ -89,13 +89,17 @@ def dial_xml():
     """
     if request.method == 'GET':
         r = plivo.Response()
+        
+        dial_number = request.args.get('To', "")
+        dial_callerId = request.args.get('From',"")
+        
+        if dial_number and dial_callerId:        
+            d = r.addDial(callerId = dial_callerId)
+            d.addNumber(dial_number)
 
-        d = r.addDial(callerId = dial_callerId)
-        d.addNumber(dial_number)
-
-        response = make_response(r.to_xml())
-        response.headers['Content-Type'] = 'text/xml'  
-        return response
+            response = make_response(r.to_xml())
+            response.headers['Content-Type'] = 'text/xml'  
+            return response
 
 
 @app.route("/speakxml/", methods=['GET'])
@@ -160,4 +164,4 @@ def save_record_url():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
