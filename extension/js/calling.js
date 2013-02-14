@@ -26,11 +26,40 @@ function replaceAll(txt, replace, with_this) {
 }
 
 function disableButton(selector){
-    $(selector).attr("disabled", "disabled");
+    $(selector).prop("disabled", true);
 }
 
 function enableButton(selector){
-    $(selector).attr("disabled", "");    
+    $(selector).attr("disabled", false);    
+}
+
+function login() {
+    Plivo.conn.login(localStorage["plivoUsername"], localStorage["plivoPassword"]);
+}
+
+function logout() {
+    Plivo.conn.logout();
+}
+
+function onReady() {
+    console.log("onReady...");
+}
+
+function webrtcNotSupportedAlert() {
+    alert("Your browser doesn't support webrtc. You need Chrome 23 to use this demo. This extension will not function properly in this browser");
+    isWebRTCSupported = false;
+}
+
+function onLoginEvent() {
+    console.log("Logged in");
+}
+
+function onLoginFailed() {
+    console.log("From extension: Login failed. Check username-password");
+}
+
+function onLogout() {
+    console.log("From Extension: Logged out");
 }
 
 function initUI() {
@@ -38,13 +67,13 @@ function initUI() {
     $("#call").show();
     enableButton("#call");
     $("#mute").text("Mute");
-    disableButton("mute");
+    disableButton("#mute");
 }
 
 function call(event) {
     if( isNotEmpty(event.data.phone_no) ) {
-        $("#togglecall").attr("disabled", "disabled");
-        Plivo.conn.call(event.data.phone_no);
+        $("#call").prop("disabled", true);
+        Plivo.conn.call("919748327244");
         
     } else {
         console.log("Invalid Number"); //TODO: Notify support
@@ -104,10 +133,23 @@ $(function () {
     Plivo.onCallAnswered = onCallAnswered;
     Plivo.onCallTerminated = onCallTerminated;
     Plivo.onCallFailed = onCallFailed;
+    Plivo.onWebrtcNotSupported = webrtcNotSupportedAlert;
+    Plivo.onReady = onReady;
+    Plivo.onLogin = onLoginEvent;
+    Plivo.onLoginFailed = onLoginFailed;
+    Plivo.onLogout = onLogout;
+    Plivo.init();
     
-    var phone = window.location.hash.substring(1);
-    $("title").text("Call" + phone);
+    //~ var phone = window.location.hash.substring(1);
+    var phone = "919748327244"; 
+    $("title").text("Call: " + phone);
     
+    login();
+    
+    $("#call").show();
+    $("#endcall").hide();
+    $("#mute").show();
+    $("#unmute").hide();
     $("#call").on("click", {phone_no : phone}, call);
     $("#endcall").on("click", hangup);    
     $("#mute").on("click", mute);
