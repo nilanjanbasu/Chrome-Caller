@@ -138,11 +138,7 @@ def play_xml():
 
 
 @app.route("/recordxml/", methods=['GET'])
-def record_xml():
-    """
-    Returns a <Record> element. This element records the caller’s 
-    voice and stores the file containing the audio recording.
-    """
+def record_xml(): 
 
     if request.method == 'GET':
         r = plivo.Response()

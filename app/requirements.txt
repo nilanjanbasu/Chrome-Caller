@@ -1,9 +1,11 @@
+## The following requirements were added by pip --freeze:
 Flask==0.8
 Jinja2==2.6
 Werkzeug==0.8.3
+argparse==1.2.1
 certifi==0.0.8
 chardet==1.0.1
 distribute==0.6.24
-plivo==0.2.2
+plivo==0.3.2
 requests==0.10.8
 wsgiref==0.1.2
