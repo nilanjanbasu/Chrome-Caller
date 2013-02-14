@@ -25,138 +25,77 @@ function replaceAll(txt, replace, with_this) {
     return txt.replace(new RegExp(replace, 'g'),with_this);
 }
 
+function disableButton(selector){
+    $(selector).attr("disabled", "disabled");
+}
+
+function enableButton(selector){
+    $(selector).attr("disabled", "");    
+}
+
 function initUI() {
-    //callbox
-    $('#callcontainer').hide();
-    $('#btn-container').hide();
-    $('#status_txt').text('Waiting login');
-    $('#login_box').show();
-    $('#logout_box').hide();
+    $("#endcall").hide();
+    $("#call").show();
+    enableButton("#call");
+    $("#mute").text("Mute");
+    disableButton("mute");
 }
 
-function callUI() {
-    //show outbound call UI
-    dialpadHide();
-    $('#incoming_callbox').hide('slow');
-    $('#callcontainer').show();
-    $('#status_txt').text('Ready');
-    $('#make_call').text('Call');
-}
-
-function IncomingCallUI() {
-    //show incoming call UI
-    $('#status_txt').text('Incoming Call');
-    $('#callcontainer').hide('slow');
-    $('#incoming_callbox').show('slow');
-}
-
-function callAnsweredUI() {
-    $('#status_txt').text('Call Answered....');
-    $('#incoming_callbox').hide('slow');
-    $('#callcontainer').hide('slow');
-    dialpadShow();
+function call(event) {
+    if( isNotEmpty(event.data.phone_no) ) {
+        $("#togglecall").attr("disabled", "disabled");
+        Plivo.conn.call(event.data.phone_no);
+        
+    } else {
+        console.log("Invalid Number"); //TODO: Notify support
+    }
 }
 
 function onCalling() {
     console.log("onCalling");
-    $('#status_txt').text('Connecting....');
+    $('#status').text('Connecting....');
+    disableButton("#call");
 }
 
 function onCallRemoteRinging() {
-    $('#status_txt').text('Ringing..');
+    $('#status').text('Ringing..');
+    $("#call").hide().attr("disabled","");
+    $("#endcall").show();
 }
 
 function onCallAnswered() {
     console.log('onCallAnswered');
-    callAnsweredUI()
+    
+    enableButton("#mute");
+    $('#status').text("Now talking");
 }
-
 function onCallTerminated() {
     console.log("onCallTerminated");
-    callUI()
+    $('#status').text("Call terminated");
+    initUI();
 }
 
 function onCallFailed(cause) {
-    $('#status_txt').text("Call Failed:"+cause);
+    $('#status').text("Call Failed:"+cause);
     console.log("onCallFailed:"+cause);
-    callUI();
+    initUI();
 }
 
-function call() {
-    if ($('#make_call').text() == "Call") {
-        var dest = $("#to").val();
-        if (isNotEmpty(dest)) {
-            $('#status_txt').text('Calling..');
-
-            Plivo.conn.call(dest);
-            $('#make_call').text('End');
-        }
-        else{
-            $('#status_txt').text('Invalid Destination');
-        }
-
-    }
-    else if($('#make_call').text() == "End") {
-        $('#status_txt').text('Ending..');
-        Plivo.conn.hangup();
-        $('#make_call').text('Call');
-        $('#status_txt').text('Ready');
-    }
-}
-
-function hangup() {
-    $('#status_txt').text('Hanging up..');
+function hangup(event) {
     Plivo.conn.hangup();
-    callUI()
-}
-
-function dtmf(digit) {
-    console.log("send dtmf="+digit);
-    Plivo.conn.send_dtmf(digit);
-}
-function dialpadShow() {
-    $('#btn-container').show();
-}
-
-function dialpadHide() {
-    $('#btn-container').hide();
+    initUI();
 }
 
 function mute() {
     Plivo.conn.mute();
-    $('#linkUnmute').show('slow');
-    $('#linkMute').hide('slow');
+    $("#mute").hide();
+    $("#unmute").show();
 }
 
 function unmute() {
     Plivo.conn.unmute();
-    $('#linkUnmute').hide('slow');
-    $('#linkMute').show('slow');
-}
-
-function onIncomingCall(account_name, extraHeaders) {
-    console.log("onIncomingCall:"+account_name);
-    console.log("extraHeaders=");
-    for (var key in extraHeaders) {
-        console.log("key="+key+".val="+extraHeaders[key]);
-    }
-    IncomingCallUI();
-}
-
-function onIncomingCallCanceled() {
-    callUI();
-}
-
-function answer() {
-    console.log("answering")
-    $('#status_txt').text('Answering....');
-    Plivo.conn.answer();
-    callAnsweredUI()
-}
-
-function reject() {
-    callUI()
-    Plivo.conn.reject();
+    $("#mute").show();
+    $("#unmute").hide();
 }
 
 $(function () {            
@@ -165,13 +104,14 @@ $(function () {
     Plivo.onCallAnswered = onCallAnswered;
     Plivo.onCallTerminated = onCallTerminated;
     Plivo.onCallFailed = onCallFailed;
-    Plivo.onIncomingCall = onIncomingCall;
-    Plivo.onIncomingCallCanceled = onIncomingCallCanceled;
-    
     
     var phone = window.location.hash.substring(1);
     $("title").text("Call" + phone);
-    $("span").text("Do you wish to call: " + phone);  
+    
+    $("#call").on("click", {phone_no : phone}, call);
+    $("#endcall").on("click", hangup);    
+    $("#mute").on("click", mute);
+    $("#unmute").on("click", unmute);
     
 });
 
