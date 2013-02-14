@@ -93,7 +93,7 @@ function onRequest(request, sender, sendResponse){
         }
     }
     sendResponse({});
-};
+}
 
 chrome.extension.onMessage.addListener(onRequest);
 
