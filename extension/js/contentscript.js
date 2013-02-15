@@ -38,7 +38,7 @@ function findAndReplace(el) {
     });
     if(str != new_str) {
         var div = document.createElement('div');
-        div.className = "phone_div"
+        div.className = "phone_div";
         //~ div.style.display = "inline";
         div.innerHTML = new_str;
         el.parentNode.replaceChild(div,el);
