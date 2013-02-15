@@ -1,3 +1,18 @@
 html, body{
     margin: 10px 10px;
 }
+#cont {
+    position: fixed;
+    top: 0;
+    left:0;
+    height: 0;
+    width:100%;
+    text-align:center;
+    display:none;
+}
+
+#notification_bar {
+    display: inline-block;
+    background-color: yellow;
+    text-align:left;
+}

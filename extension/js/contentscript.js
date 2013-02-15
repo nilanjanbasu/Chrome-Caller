@@ -1,3 +1,9 @@
+/* Global Variables*/
+
+var phoneNoFound = false;
+
+/*End Global Variables */
+
 function addStyle(style) {
 }
 
@@ -20,10 +26,12 @@ function findTelNumbers(el, func) {
         }
     }
 }
+
 function findAndReplace(el) {
     var str = el.nodeValue;
     var regex = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?/g ;
     var new_str =  str.replace(regex, function(word){
+        phoneNoFound = true;
         var style = "";
         console.log("Found a replacable string");
         return "<span class=\"phone_number\">"+word+"</span><button type=\"button\">Call</button>";
@@ -45,8 +53,9 @@ for(var x = 0; x < spans.length; ++x) {
     var bt = spans[x].nextSibling; //potential code breaking point
     bt.addEventListener("click", onCallPressed , false);
 }
-
-
+if(phoneNoFound) {
+    chrome.extension.sendMessage({found_numbers : true},function(response){});    
+}
 
 //~ string = document.body.innerHTML;
 

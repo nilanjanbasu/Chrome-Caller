@@ -1,24 +1,10 @@
 function notify(msg) {
-    
+        $("#notification_bar").text(msg);
+        $("#cont").fadeIn(30).delay(3000).fadeOut(300); //notify
 }
 
 function isNotEmpty(n) {
     return n.length > 0;
-}
-
-function formatUSNumber(n) {
-    var dest = n.replace(/-/g, '');
-    dest = dest.replace(/ /g, '');
-    dest = dest.replace(/\+/g, '');
-    dest = dest.replace(/\(/g, '');
-    dest = dest.replace(/\)/g, '');
-    if (!isNaN(dest)) {
-        n = dest
-        if (n.length == 10 && n.substr(0, 1) != "1") {
-            n = "1" + n;
-        }
-    }
-    return n;
 }
 
 function replaceAll(txt, replace, with_this) {
@@ -127,6 +113,12 @@ function unmute() {
     $("#unmute").hide();
 }
 
+function onRequest(request, sender, sendResponse) {
+    if(request.notification) {
+        notify(request.notification);        
+    }
+}
+
 $(function () {            
     Plivo.onCalling = onCalling;
     Plivo.onCallRemoteRinging = onCallRemoteRinging;
@@ -154,6 +146,8 @@ $(function () {
     $("#endcall").on("click", hangup);    
     $("#mute").on("click", mute);
     $("#unmute").on("click", unmute);
+    
+    chrome.extension.onMessage.addListener(onRequest);
     
 });
 
