@@ -1,7 +1,13 @@
 function notify(msg) {
-        $("#notification_bar").text(msg);
-        $("#cont").fadeIn(30).delay(3000).fadeOut(300); //notify
+    $("#notification_bar").text(msg);
+    $("#cont").fadeIn(30).delay(3000).fadeOut(300); //notify
 }
+
+function notifyHTML(html) {
+    $("#notification_bar").html(html);
+    $("#cont").fadeIn(30).delay(3000).fadeOut(300); //notify    
+}
+
 
 function isNotEmpty(n) {
     return n.length > 0;
@@ -42,6 +48,8 @@ function onLoginEvent() {
 
 function onLoginFailed() {
     console.log("From extension: Login failed. Check username-password");
+    //notifyHTML("Login Failed. Update in <a href=\"chrome-extension://__MSG_@@extension_id__/html/options.html\">Options</a> page");
+    notify("Login failed. Go to options page to update username-password");
 }
 
 function onLogout() {

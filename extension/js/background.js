@@ -22,6 +22,10 @@ function formatUSNumber(n) {
     dest = dest.replace(/\(/g, '');
     dest = dest.replace(/\)/g, '');
     dest = dest.replace(/\./g, '');
+    dest = dest.replace(/[^\dx]/g, '');
+    dest = dest.split(/x/);
+    
+    dest = dest[0]; // Reject the extension part TODO: Figure out what to do with extension
     if (!isNaN(dest)) {
         n = dest;
         if (n.length == 10 && n.substr(0, 1) != "1") {
@@ -83,34 +87,20 @@ function onRequest(request, sender, sendResponse){
                                 window_map.tabid = tab.id;
                             });
                 });
-                
-                   
-                //~ chrome.tabs.create({
-                            //~ 'url': url,
-                            //~ active: false
-                        //~ }, function(tab) {
-                            //~ // After the tab has been created, open a window to inject the tab
-                            //~ chrome.windows.create({
-                                //~ tabId: tab.id,
-                                //~ type: 'popup',
-                                //~ focused: true,
-                                //~ height: 400, 
-                                //~ width: 400 , 
-                                //~ left: 400, 
-                                //~ top: 200
-                            //~ }, call_window_handler);
-                //~ });             
-                
 
-                //~ chrome.windows.create({ 'url' : url, 'type' : 'popup', height: 400, width: 400 , left: 400, top: 200}, call_window_handler);
             } else{
                 chrome.windows.update(parseInt(window_map.existing_window, 10), { focused : true }, function(window){});
-                //~ chrome
+                chrome.extension.sendMessage(window_map.tabid, {notification : "Please Close this window to start another call"});
                 
-                //TODO notify the window properly that another call event came up
+                //TODO make calling.js identify if it is in the middle of a call, if yes then notify else replace number
             }
         } else { //It is not a valid phone number
-            //TODO Send a message to the window for it to notify
+            if(window_map.call_window_exists){
+                chrome.extension.sendMessage(window_map.tabid, {notification : ""});
+            } else {
+                alert("This is not a valid number. Sorry!");
+                //TODO: Make sure that user can edit a number etc.
+            }
         }
     }
     sendResponse({});
