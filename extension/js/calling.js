@@ -67,7 +67,7 @@ function initUI() {
 function call(event) {
     if( isNotEmpty(event.data.phone_no) ) {
         $("#call").prop("disabled", true);
-        Plivo.conn.call("919748327244");
+        Plivo.conn.call(event.data.phone_no);
         
     } else {
         console.log("Invalid Number"); //TODO: Notify support

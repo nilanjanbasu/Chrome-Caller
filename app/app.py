@@ -96,7 +96,6 @@ def dial_xml():
         if dial_number and dial_callerId:        
             d = r.addDial(callerId = dial_callerId)
             d.addNumber(dial_number)
-
             response = make_response(r.to_xml())
             response.headers['Content-Type'] = 'text/xml'  
             return response
