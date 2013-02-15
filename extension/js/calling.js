@@ -1,6 +1,6 @@
 function notify(msg) {
     $("#notification_bar").text(msg);
-    $("#cont").fadeIn(30).delay(3000).fadeOut(300); //notify
+    $("#cont").fadeIn(30).delay(6000).fadeOut(300); //notify
 }
 
 function notifyHTML(html) {
@@ -143,6 +143,7 @@ $(function () {
     var phone = window.location.hash.substring(1);
     //~ var phone = "919748327244"; 
     $("title").text("Call: " + phone);
+    $("#phone_number").text(phone);
     
     login();
     
